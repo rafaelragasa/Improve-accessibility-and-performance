@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Systems and Technologies - Weeks 16-17 Laboratory</title>
+    <meta
+      name="description"
+      content="Accessibility and performance lab for the SecureNotes project."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar" aria-label="Course header">
+        <p class="eyebrow">Weeks 16-17 • Laboratory Activity</p>
+        <h1>Make It Fast &amp; Fair, Then Ship It</h1>
+        <p class="subtitle">
+          Accessibility + performance, then an automated pipeline — on the SecureNotes app
+        </p>
+
+        <div class="course-meta" aria-label="Course information">
+          <div>
+            <span class="meta-label">Course</span>
+            <span>Web Systems and Technologies</span>
+          </div>
+          <div>
+            <span class="meta-label">Units</span>
+            <span>1 (Laboratory)</span>
+          </div>
+          <div>
+            <span class="meta-label">Work in</span>
+            <span>Pairs</span>
+          </div>
+          <div>
+            <span class="meta-label">Est. time</span>
+            <span>3–4 hours</span>
+          </div>
+          <div>
+            <span class="meta-label">Submit</span>
+            <span>GitHub PR links</span>
+          </div>
+        </div>
+      </header>
+
+      <main id="main-content">
+        <section class="intro card" aria-labelledby="scenario-heading">
+          <p id="scenario-heading" class="scenario-kicker">The scenario</p>
+          <p>
+            SecureNotes is built, secured (Weeks 13–14), and tested (Week 15). The API works
+            and it’s safe. But the page people actually use is inaccessible and slow, and nothing
+            stops a teammate from quietly breaking it later. This lab is the last mile: first make
+            the front end fast and usable for everyone (Week 16), then build the pipeline that
+            runs every check automatically on each push (Week 17), and ship it. Part A fixes it;
+            Part B makes sure it stays fixed.
+          </p>
+        </section>
+
+        <section aria-labelledby="practice-heading" class="practice">
+          <h2 id="practice-heading">What you’ll practice</h2>
+          <div class="practice-grid">
+            <article class="card">
+              <h3>Part A — fast &amp; fair (Week 16)</h3>
+              <ul>
+                <li>WCAG basics: landing, titles, alt text</li>
+                <li>landmarks, heading order, real buttons</li>
+                <li>form labels tied to inputs</li>
+                <li>color contrast that meets AA (4.5:1)</li>
+                <li>perf: deferred JS, image dimensions, lazy loading</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Part B — ship it (Week 17)</h3>
+              <ul>
+                <li>a GitHub Actions workflow file</li>
+                <li>triggers on push &amp; pull request</li>
+                <li>a job on a clean Ubuntu runner</li>
+                <li>steps: checkout — Python — install — test</li>
+                <li>a red pipeline that blocks a bad merge</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="setup card" aria-labelledby="setup-heading">
+          <h2 id="setup-heading">Setup (10 minutes)</h2>
+          <div class="setup-grid">
+            <pre aria-label="Setup commands"># inside the student folder
+python -m venv venv
+source venv/bin/activate  # Win: venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload  # the app
+# open http://127.0.0.1:8000/app/
+pytest -q
+many checks red</pre>
+
+            <aside class="accounts" aria-label="Local account details">
+              <h3>Accounts</h3>
+              <ul>
+                <li>admin / admin123 (admin)</li>
+                <li>alice / alicepass — owns note 1</li>
+                <li>bob / bobpass — owns note 2</li>
+              </ul>
+
+              <p>
+                You edit only three files: app/static/index.html, app/static/style.css, and
+                github/workflows/ci.yml. Don’t touch app/main.py or the tests.
+              </p>
+              <p>Keep the bcrypt pin (bcrypt==4.0.1).</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tasks card" aria-labelledby="accessible-heading">
+          <h2 id="accessible-heading">Part A — Make it accessible &amp; fast (~90 min)</h2>
+
+          <div class="task-list" role="list" aria-label="Accessibility and performance checklist">
+            <div class="task-row" role="listitem">
+              <span class="task-id">1</span>
+              <span class="task-where">index.html</span>
+              <span class="task-action">
+                Perceivable. Add <code>&lt;html lang="en"&gt;</code>, a real
+                <code>&lt;title&gt;</code>, and alt text on both images.
+              </span>
+            </div>
+            <div class="task-row" role="listitem">
+              <span class="task-id">2</span>
+              <span class="task-where">index.html</span>
+              <span class="task-action">
+                Add a proper page heading and update the page title to match the lab.
+              </span>
+            </div>
+            <div class="task-row" role="listitem">
+              <span class="task-id">3</span>
+              <span class="task-where">index.html</span>
+              <span class="task-action">
+                Structure &amp; controls. Make the content a <code>&lt;main&gt;</code>, fix heading
+                levels, and turn the fake control into a real <code>&lt;button&gt;</code>.
+              </span>
+            </div>
+            <div class="task-row" role="listitem">
+              <span class="task-id">4</span>
+              <span class="task-where">styles.css</span>
+              <span class="task-action">
+                Contrast. Darken the ink and brand colours until the text meets AA contrast.
+              </span>
+            </div>
+            <div class="task-row" role="listitem">
+              <span class="task-id">5</span>
+              <span class="task-where">index.html</span>
+              <span class="task-action">
+                Performance. Defer the script, add width and height to both images, and lazy-load
+                the large content image.
+              </span>
+            </div>
+          </div>
+
+          <div class="status-banner" aria-live="polite">
+            <p>
+              Tests catch the mechanical stuff — you catch the rest. A test can see a missing
+              <code>alt</code>, but not whether your alt text is useful. After the site is green,
+              tab through the page with your keyboard only, and run Lighthouse (Chrome DevTools →
+              Lighthouse → Accessibility + Performance) to see the full score.
+            </p>
+          </div>
+        </section>
+
+        <section class="gallery" aria-labelledby="gallery-heading">
+          <h2 id="gallery-heading">Project preview</h2>
+          <div class="gallery-grid">
+            <figure>
+              <img
+                src="assets/hero.svg"
+                alt="SecureNotes interface preview with calendar and notes cards"
+                width="640"
+                height="420"
+              />
+            </figure>
+            <figure>
+              <img
+                src="assets/preview.svg"
+                alt="SecureNotes dashboard showing a note list and editor view"
+                width="640"
+                height="420"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </section>
+
+        <section class="card shipment" aria-labelledby="partb-heading">
+          <h2 id="partb-heading">Part B — Ship it on a pipeline (~45 min)</h2>
+          <div class="pipeline-box">
+            <p>Build <code>.github/workflows/ci.yml</code> with a matrix-free push and pull request flow.</p>
+            <p>On each run, the job checks out the repo, sets up Python, installs dependencies, and runs the test suite.</p>
+          </div>
+        </section>
+
+        <section class="card review" aria-labelledby="partc-heading">
+          <h2 id="partc-heading">Part C — Push &amp; peer review (~30 min)</h2>
+          <div class="review-box">
+            <p>Open a pull request and let the Actions tab do its work. A green check means the change is ready to merge.</p>
+            <button type="button" id="review-button">Review app status</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
